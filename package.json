@@ -6,12 +6,16 @@
   "scripts": {
     "build": "nx build",
     "lint": "xrun -s nx:format nx:lint",
+    "lint-staged": "lint-staged",
     "nx:e2e": "nx run-many --target=e2e --all",
     "nx:format": "nx format --write",
     "nx:lint": "nx run-many --target=lint --all",
     "nx:test": "nx test",
+    "pre-commit": "xrun -s lint-staged lint",
+    "prepare": "husky install",
     "start": "nx serve",
-    "test": "xrun -s build lint nx:test nx:e2e"
+    "test": "xrun -s build lint nx:test nx:e2e",
+    "xrun": "xrun"
   },
   "dependencies": {
     "@nrwl/next": "14.1.7",
@@ -51,6 +55,7 @@
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.5.0",
+    "husky": "8.0.1",
     "jest": "27.5.1",
     "lint-staged": "12.4.1",
     "nx": "14.1.7",
