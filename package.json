@@ -1,18 +1,22 @@
 {
   "name": "nx-next-starter",
   "version": "0.0.0",
+  "private": true,
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
     "build": "nx build",
-    "nx:lint": "nx run-many --target=lint --all",
-    "nx:format": "nx format --write",
     "lint": "xrun -s nx:format nx:lint",
-    "nx:test": "nx test",
+    "lint-staged": "lint-staged",
     "nx:e2e": "nx run-many --target=e2e --all",
-    "test": "xrun -s build lint nx:test nx:e2e"
+    "nx:format": "nx format --write",
+    "nx:lint": "nx run-many --target=lint --all",
+    "nx:test": "nx test",
+    "pre-commit": "xrun -s lint-staged lint",
+    "prepare": "husky install",
+    "start": "nx serve",
+    "test": "xrun -s build lint nx:test nx:e2e",
+    "xrun": "xrun"
   },
-  "private": true,
   "dependencies": {
     "@nrwl/next": "14.1.7",
     "classnames": "2.3.1",
@@ -51,11 +55,14 @@
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.5.0",
+    "husky": "8.0.1",
     "jest": "27.5.1",
+    "lint-staged": "12.4.1",
     "nx": "14.1.7",
     "prettier": "2.5.1",
     "react-test-renderer": "18.1.0",
     "sass": "1.43.2",
+    "sort-package-json": "1.57.0",
     "ts-jest": "27.1.4",
     "ts-node": "9.1.1",
     "typescript": "~4.6.2"
