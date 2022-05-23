@@ -13,6 +13,12 @@
         ]
       }
     },
+    "generate:gql": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "graphql-codegen -c libs/rickandmorty/data-access/codegen.yml"
+      }
+    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/rickandmorty/data-access"],

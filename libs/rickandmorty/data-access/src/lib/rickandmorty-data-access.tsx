@@ -1,12 +1,9 @@
-/* eslint-disable-next-line */
-export interface RickandmortyDataAccessProps {}
+import { GraphQLClient } from 'graphql-request';
+import { getSdk } from './generated/graphql';
 
-export function RickandmortyDataAccess(props: RickandmortyDataAccessProps) {
-  return (
-    <div>
-      <h1>Welcome to RickandmortyDataAccess!</h1>
-    </div>
-  );
-}
+const gqlClient = new GraphQLClient(
+  // IF this is proxied, then it needs to check for browser
+  'https://rickandmortyapi.com/graphql'
+);
 
-export default RickandmortyDataAccess;
+export const { getCharacters } = getSdk(gqlClient);

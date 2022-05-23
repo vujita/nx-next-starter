@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "capaj.graphql-codegen-vscode",
     "nrwl.angular-console",
     "esbenp.prettier-vscode",
     "firsttris.vscode-jest-runner",
