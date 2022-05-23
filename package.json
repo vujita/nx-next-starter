@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "nx build",
+    "dev": "nx serve",
     "generate:gql": "nx run-many --target=generate:gql --all",
     "lint": "xrun -s nx:format:write nx:lint",
     "lint-staged": "lint-staged",
@@ -16,7 +17,8 @@
     "nx:test": "nx test",
     "pre-commit": "xrun -s lint-staged lint",
     "prepare": "husky install",
-    "start": "nx serve",
+    "site:prod:run": "nx run site:serve:production",
+    "start": "xrun -s build site:prod:run",
     "test": "xrun -s build lint nx:test nx:e2e nx:format:check",
     "xrun": "xrun"
   },

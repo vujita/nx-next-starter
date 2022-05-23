@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { getSdk, GetCharactersQueryVariables } from './generated/graphql';
 
 const IS_BROWSER = typeof window !== 'undefined';
@@ -14,19 +14,14 @@ export const { getCharacters } = getSdk(gqlClient);
 export const getCharactersQueryKey = (
   variables: GetCharactersQueryVariables = {}
 ) => {
-  // const key = [
-  //   'characters',
-  //   variables.page,
-  //   JSON.stringify(variables.filter),
-  // ].join('-');
-  // return key;
-  return 'characters';
+  const key = ['characters', JSON.stringify(variables)].join('-');
+  return key;
 };
 
 export function useGetCharacters(variables: GetCharactersQueryVariables = {}) {
   return useQuery(
     getCharactersQueryKey(variables),
     () => getCharacters(variables),
-    { keepPreviousData: true }
+    {}
   );
 }

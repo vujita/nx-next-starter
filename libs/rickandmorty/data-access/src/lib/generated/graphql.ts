@@ -222,6 +222,12 @@ export type GetCharactersQuery = {
       gender?: string | null;
       species?: string | null;
       created?: string | null;
+      origin?: {
+        __typename?: 'Location';
+        id?: string | null;
+        name?: string | null;
+        dimension?: string | null;
+      } | null;
     } | null> | null;
   } | null;
 };
@@ -233,6 +239,12 @@ export type CharacterDetailsFragment = {
   gender?: string | null;
   species?: string | null;
   created?: string | null;
+  origin?: {
+    __typename?: 'Location';
+    id?: string | null;
+    name?: string | null;
+    dimension?: string | null;
+  } | null;
 };
 
 export const CharacterDetailsFragmentDoc = gql`
@@ -242,6 +254,11 @@ export const CharacterDetailsFragmentDoc = gql`
     gender
     species
     created
+    origin {
+      id
+      name
+      dimension
+    }
   }
 `;
 export const GetCharactersDocument = gql`

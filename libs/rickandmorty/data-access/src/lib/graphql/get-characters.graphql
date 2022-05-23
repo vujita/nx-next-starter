@@ -18,4 +18,9 @@ fragment CharacterDetails on Character {
   gender
   species
   created
+  origin {
+    id
+    name
+    dimension
+  }
 }

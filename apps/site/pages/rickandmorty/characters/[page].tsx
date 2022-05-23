@@ -2,12 +2,18 @@ import {
   useGetCharacters,
   getCharacters,
   getCharactersQueryKey,
+  GetCharactersQueryVariables,
 } from '@myorg/rickandmorty/data-access';
+import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from 'react-query';
+import Link from 'next/link';
+import { useMemo } from 'react';
 
-export async function getStaticProps() {
+export async function getServerSideProps({ params }) {
   const queryClient = new QueryClient();
-  const variables = {};
+  const variables: GetCharactersQueryVariables = {
+    page: Number(params.page ?? 0),
+  };
   await queryClient.prefetchQuery(getCharactersQueryKey(variables), () =>
     getCharacters(variables)
   );
@@ -18,13 +24,34 @@ export async function getStaticProps() {
   };
 }
 export default function Characters() {
-  const { isFetching, data } = useGetCharacters();
+  const router = useRouter();
+  const page = useMemo(
+    () => (router.query.page ? Number(router.query.page) : 0),
+    [router.query.page]
+  );
+  const { isFetching, data } = useGetCharacters({
+    page,
+  });
   if (isFetching) {
     return '...loading';
   }
   return (
     <div>
       <div className="pa2">
+        {data.characters?.info?.next && (
+          <a
+            onClick={() => {
+              router.push({
+                pathname: router.basePath ?? '',
+                query: {
+                  page: data.characters.info.next,
+                },
+              });
+            }}
+          >
+            Next
+          </a>
+        )}
         <div>Page</div>
         <div>count: {data.characters.info.count}</div>
         <div>page: {data.characters.info.pages}</div>

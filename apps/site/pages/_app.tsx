@@ -5,7 +5,18 @@ import { useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 export default function CustomApp({ Component, pageProps }: AppProps) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: false,
+          },
+        },
+      })
+  );
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}></Hydrate>
