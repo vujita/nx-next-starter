@@ -1,5 +1,22 @@
-import { useGetCharacters } from '@myorg/rickandmorty/data-access';
-
+import {
+  useGetCharacters,
+  getCharacters,
+  getCharactersQueryKey,
+} from '@myorg/rickandmorty/data-access';
+import { dehydrate, QueryClient } from 'react-query';
+export async function getStaticProps() {
+  const queryClient = new QueryClient();
+  const variables = {};
+  await queryClient.prefetchQuery(getCharactersQueryKey(variables), () =>
+    getCharacters(variables)
+  );
+  console.log(queryClient);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+}
 export default function Characters() {
   const { isFetching, data } = useGetCharacters();
   if (isFetching) {

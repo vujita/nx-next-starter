@@ -10,6 +10,12 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  rewrites: async () => [
+    {
+      source: '/api/rickandmorty/graphql',
+      destination: 'https://rickandmortyapi.com/graphql',
+    },
+  ],
 };
 
 module.exports = withNx(nextConfig);
