@@ -1,3 +1,10 @@
+import Link from 'next/link';
+
 export default function Index() {
-  return <div>TODO!!!</div>;
+  return (
+    <>
+      <Link href="/rickandmorty">Rick and Morty Example</Link>
+      <div>TODO!!!</div>
+    </>
+  );
 }
