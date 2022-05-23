@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
-import { getSdk } from './generated/graphql';
+import { useQuery } from 'react-query';
+import { getSdk, GetCharactersQueryVariables } from './generated/graphql';
 
 const gqlClient = new GraphQLClient(
   // IF this is proxied, then it needs to check for browser
@@ -7,3 +8,16 @@ const gqlClient = new GraphQLClient(
 );
 
 export const { getCharacters } = getSdk(gqlClient);
+
+export const getCharactersQueryKey = (
+  variables: GetCharactersQueryVariables = {}
+) => {
+  const key = ['characters', JSON.stringify(variables)].join('-');
+  return key;
+};
+
+export function useGetCharacters(variables: GetCharactersQueryVariables = {}) {
+  return useQuery(getCharactersQueryKey(variables), () =>
+    getCharacters(variables)
+  );
+}
