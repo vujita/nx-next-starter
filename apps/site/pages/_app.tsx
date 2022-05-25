@@ -4,6 +4,7 @@ import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { MantineProvider } from '@mantine/core';
+import MainLayout from '../components/main-layout';
 
 export default function CustomApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -32,7 +33,9 @@ export default function CustomApp({ Component, pageProps }: AppProps) {
           colorScheme: 'light',
         }}
       >
-        <Component {...pageProps} />
+        <MainLayout>
+          <Component {...pageProps} />
+        </MainLayout>
       </MantineProvider>
       <ReactQueryDevtools></ReactQueryDevtools>
     </QueryClientProvider>

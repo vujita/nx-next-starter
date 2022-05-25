@@ -6,7 +6,6 @@ import {
 } from '@myorg/rickandmorty/data-access';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from 'react-query';
-import Link from 'next/link';
 import { useMemo } from 'react';
 
 export async function getServerSideProps({ params }) {

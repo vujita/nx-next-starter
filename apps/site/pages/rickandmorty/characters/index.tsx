@@ -4,8 +4,9 @@ import {
   getCharactersQueryKey,
 } from '@myorg/rickandmorty/data-access';
 import { dehydrate, QueryClient } from 'react-query';
+import { Center, Loader } from '@mantine/core';
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const queryClient = new QueryClient();
   const variables = {};
   await queryClient.prefetchQuery(getCharactersQueryKey(variables), () =>
@@ -17,10 +18,15 @@ export async function getStaticProps() {
     },
   };
 }
+
 export default function Characters() {
   const { isFetching, data } = useGetCharacters();
   if (isFetching) {
-    return '...loading';
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
   }
   return (
     <div>
