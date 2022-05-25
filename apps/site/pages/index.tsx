@@ -1,10 +1,8 @@
-import Link from 'next/link';
-
+import { Text } from '@mantine/core';
 export default function Index() {
   return (
-    <>
-      <Link href="/rickandmorty">Rick and Morty Example</Link>
-      <div>TODO!!!</div>
-    </>
+    <div>
+      <Text>A placeholder to create any landing page you want</Text>
+    </div>
   );
 }

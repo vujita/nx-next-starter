@@ -1,0 +1,12 @@
+schema: https://rickandmortyapi.com/graphql
+overwrite: true
+documents: './libs/rickandmorty/data-access/src/**/*.graphql'
+hooks:
+  afterAllFileWrite:
+    - nx format:write
+generates:
+  ./libs/rickandmorty/data-access/src/lib/generated/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request
