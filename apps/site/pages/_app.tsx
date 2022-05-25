@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { MantineProvider } from '@mantine/core';
 
 export default function CustomApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -22,17 +23,17 @@ export default function CustomApp({ Component, pageProps }: AppProps) {
       <Hydrate state={pageProps.dehydratedState}></Hydrate>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/**
-         * Using https://tachyons.io/ for atomic css
-         */}
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/tachyons/css/tachyons.min.css"
-        />
       </Head>
-      <main>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          /** Put your mantine theme override here */
+          colorScheme: 'light',
+        }}
+      >
         <Component {...pageProps} />
-      </main>
+      </MantineProvider>
       <ReactQueryDevtools></ReactQueryDevtools>
     </QueryClientProvider>
   );

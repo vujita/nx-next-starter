@@ -24,7 +24,7 @@ export default function Characters() {
   }
   return (
     <div>
-      <div className="pa2">
+      <div>
         <div>Page</div>
         <div>count: {data.characters.info.count}</div>
         <div>page: {data.characters.info.pages}</div>
@@ -34,7 +34,7 @@ export default function Characters() {
       <hr />
       <div>
         {data.characters.results.map((char) => (
-          <div key={char.id} className="pa2">
+          <div key={char.id}>
             <div>name: {char.name}</div>
             <div>created: {char.created}</div>
             <div>species: {char.species}</div>
