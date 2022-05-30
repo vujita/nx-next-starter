@@ -13,7 +13,7 @@ type SiteLink = {
   href: string;
   text: string;
 };
-type Props = React.PropsWithChildren<{
+export type MainLayoutProps = React.PropsWithChildren<{
   title?: string;
   siteLinks?: SiteLink[];
 }>;
@@ -26,15 +26,12 @@ const defaultSiteLinks: SiteLink[] = [
     href: '/rickandmorty',
     text: 'Rick & Morty',
   },
-  {
-    href: '/rickandmorty/characters',
-    text: 'Rick & Morty Characters',
-  },
 ];
 export default function MainLayout({
   children,
+  title = 'Example Application Header',
   siteLinks = defaultSiteLinks,
-}: Props) {
+}: MainLayoutProps) {
   const [opened, setOpened] = useState(false);
 
   return (
@@ -68,7 +65,7 @@ export default function MainLayout({
               />
             </MediaQuery>
 
-            <Text>Application header</Text>
+            <Text>{title}</Text>
           </div>
         </Header>
       }

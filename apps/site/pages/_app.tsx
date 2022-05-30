@@ -33,7 +33,7 @@ export default function CustomApp({ Component, pageProps }: AppProps) {
           colorScheme: 'light',
         }}
       >
-        <MainLayout>
+        <MainLayout title="Starter App">
           <Component {...pageProps} />
         </MainLayout>
       </MantineProvider>
