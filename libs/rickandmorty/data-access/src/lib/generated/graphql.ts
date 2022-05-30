@@ -221,6 +221,7 @@ export type GetCharactersQuery = {
       name?: string | null;
       gender?: string | null;
       species?: string | null;
+      image?: string | null;
       created?: string | null;
       origin?: {
         __typename?: 'Location';
@@ -238,6 +239,7 @@ export type CharacterDetailsFragment = {
   name?: string | null;
   gender?: string | null;
   species?: string | null;
+  image?: string | null;
   created?: string | null;
   origin?: {
     __typename?: 'Location';
@@ -253,6 +255,7 @@ export const CharacterDetailsFragmentDoc = gql`
     name
     gender
     species
+    image
     created
     origin {
       id

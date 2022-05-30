@@ -17,6 +17,7 @@ fragment CharacterDetails on Character {
   name
   gender
   species
+  image
   created
   origin {
     id

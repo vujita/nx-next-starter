@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "rickandmorty-data-access": "libs/rickandmorty/data-access",
+    "rickandmorty-ui": "libs/rickandmorty/ui",
     "site": "apps/site"
   }
 }

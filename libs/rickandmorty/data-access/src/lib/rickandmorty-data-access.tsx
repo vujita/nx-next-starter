@@ -22,6 +22,8 @@ export function useGetCharacters(variables: GetCharactersQueryVariables = {}) {
   return useQuery(
     getCharactersQueryKey(variables),
     () => getCharacters(variables),
-    {}
+    {
+      keepPreviousData: true,
+    }
   );
 }

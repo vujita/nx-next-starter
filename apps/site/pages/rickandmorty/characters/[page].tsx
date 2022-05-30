@@ -1,72 +1,65 @@
+import { Space } from '@mantine/core';
 import {
-  useGetCharacters,
-  getCharacters,
-  getCharactersQueryKey,
   GetCharactersQueryVariables,
+  getCharactersQueryKey,
+  getCharacters,
 } from '@myorg/rickandmorty/data-access';
+import { CharactersGrid } from '@myorg/rickandmorty/ui';
+import BreadcrumbsLinks from '../../../components/breadcrumb-links';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from 'react-query';
-import { useMemo } from 'react';
 
-export async function getServerSideProps({ params }) {
-  const queryClient = new QueryClient();
-  const variables: GetCharactersQueryVariables = {
-    page: Number(params.page ?? 0),
-  };
-  await queryClient.prefetchQuery(getCharactersQueryKey(variables), () =>
-    getCharacters(variables)
-  );
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-}
-export default function Characters() {
+export default function CharactersPage({ page }) {
   const router = useRouter();
-  const page = useMemo(
-    () => (router.query.page ? Number(router.query.page) : 0),
-    [router.query.page]
-  );
-  const { isFetching, data } = useGetCharacters({
-    page,
-  });
-  if (isFetching) {
-    return '...loading';
-  }
   return (
-    <div>
-      <div>
-        {data.characters?.info?.next && (
-          <a
-            onClick={() => {
-              router.push({
-                pathname: router.basePath ?? '',
-                query: {
-                  page: data.characters.info.next,
-                },
-              });
-            }}
-          >
-            Next
-          </a>
-        )}
-        <div>Page</div>
-        <div>count: {data.characters.info.count}</div>
-        <div>page: {data.characters.info.pages}</div>
-        <div>next: {data.characters.info.next ?? 0}</div>
-        <div>prev: {data.characters.info.prev ?? 0}</div>
-      </div>
-      <hr />
-      <div>
-        {data.characters.results.map((char) => (
-          <div key={char.id}>
-            <div>name: {char.name}</div>
-            <div>created: {char.created}</div>
-            <div>species: {char.species}</div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <>
+      <BreadcrumbsLinks
+        links={[
+          { title: 'Home', href: '/' },
+          {
+            title: 'Rick & Morty',
+            href: '/rickandmorty',
+          },
+          {
+            title: 'Characters',
+            href: '/rickandmorty/characters',
+          },
+          {
+            title: `Page ${page}`,
+            href: '/rickandmorty/characters',
+          },
+        ]}
+      />
+      <Space h={20} />
+      <CharactersGrid
+        page={page}
+        onPageChange={(newPage) => {
+          router.push({
+            pathname: router.pathname,
+            query: {
+              page: newPage,
+            },
+          });
+        }}
+      />
+    </>
   );
 }
+const IS_BROWSER = typeof window !== 'undefined';
+CharactersPage.getInitialProps = async ({ query }) => {
+  const page = query.page ? Number(query.page) : 1;
+  const props: { page: number; dehydratedState?: unknown } = {
+    page,
+  };
+  if (!IS_BROWSER) {
+    const queryClient = new QueryClient();
+    const variables: GetCharactersQueryVariables = {
+      page,
+    };
+    await queryClient.prefetchQuery(getCharactersQueryKey(variables), () =>
+      getCharacters(variables)
+    );
+    props.dehydratedState = dehydrate(queryClient);
+  }
+  return props;
+};
