@@ -1,12 +1,30 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { MantineProvider } from '@mantine/core';
+import {
+  ColorScheme,
+  ColorSchemeProvider,
+  MantineProvider,
+} from '@mantine/core';
 import MainLayout from '../components/main-layout';
+import { useLocalStorage } from '@mantine/hooks';
 
 export default function CustomApp({ Component, pageProps }: AppProps) {
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
+  const [localStorageColorScheme, setLocalStorageScheme] =
+    useLocalStorage<ColorScheme>({
+      key: 'color-scheme',
+      defaultValue: colorScheme,
+    });
+  useEffect(() => {
+    if (colorScheme !== localStorageColorScheme) {
+      setColorScheme(localStorageColorScheme);
+    }
+  }, [colorScheme, localStorageColorScheme]);
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setLocalStorageScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -26,18 +44,22 @@ export default function CustomApp({ Component, pageProps }: AppProps) {
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{
-            /** Put your mantine theme override here */
-            colorScheme: 'light',
-          }}
+        <ColorSchemeProvider
+          colorScheme={colorScheme}
+          toggleColorScheme={toggleColorScheme}
         >
-          <MainLayout title="Starter App">
-            <Component {...pageProps} />
-          </MainLayout>
-        </MantineProvider>
+          <MantineProvider
+            withGlobalStyles
+            withNormalizeCSS
+            theme={{
+              colorScheme,
+            }}
+          >
+            <MainLayout title="Starter App">
+              <Component {...pageProps} />
+            </MainLayout>
+          </MantineProvider>
+        </ColorSchemeProvider>
         <ReactQueryDevtools></ReactQueryDevtools>
       </QueryClientProvider>
     </React.StrictMode>
