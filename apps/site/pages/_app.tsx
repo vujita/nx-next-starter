@@ -1,7 +1,7 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import {
   ColorScheme,
@@ -9,11 +9,22 @@ import {
   MantineProvider,
 } from '@mantine/core';
 import MainLayout from '../components/main-layout';
+import { useLocalStorage } from '@mantine/hooks';
 
 export default function CustomApp({ Component, pageProps }: AppProps) {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
+  const [localStorageColorScheme, setLocalStorageScheme] =
+    useLocalStorage<ColorScheme>({
+      key: 'color-scheme',
+      defaultValue: colorScheme,
+    });
+  useEffect(() => {
+    if (colorScheme !== localStorageColorScheme) {
+      setColorScheme(localStorageColorScheme);
+    }
+  }, [colorScheme, localStorageColorScheme]);
   const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+    setLocalStorageScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
   const [queryClient] = useState(
     () =>
       new QueryClient({
