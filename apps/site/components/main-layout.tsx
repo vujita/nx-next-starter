@@ -5,15 +5,18 @@ import {
   Text,
   MediaQuery,
   Burger,
+  Anchor,
 } from '@mantine/core';
 import { useState } from 'react';
 import Link from 'next/link';
+import NextNProgress from 'nextjs-progressbar';
+import { useRouter } from 'next/router';
 
 type SiteLink = {
   href: string;
   text: string;
 };
-type Props = React.PropsWithChildren<{
+export type MainLayoutProps = React.PropsWithChildren<{
   title?: string;
   siteLinks?: SiteLink[];
 }>;
@@ -26,19 +29,18 @@ const defaultSiteLinks: SiteLink[] = [
     href: '/rickandmorty',
     text: 'Rick & Morty',
   },
-  {
-    href: '/rickandmorty/characters',
-    text: 'Rick & Morty Characters',
-  },
 ];
 export default function MainLayout({
   children,
+  title = 'Example Application Header',
   siteLinks = defaultSiteLinks,
-}: Props) {
+}: MainLayoutProps) {
   const [opened, setOpened] = useState(false);
+  const router = useRouter();
 
   return (
     <AppShell
+      fixed
       padding="md"
       navbar={
         <Navbar
@@ -48,8 +50,10 @@ export default function MainLayout({
           width={{ sm: 200, lg: 300 }}
         >
           {siteLinks.map((sl) => (
-            <Link href={sl.href} key={sl.href}>
-              {sl.text}
+            <Link href={sl.href} key={sl.href} passHref>
+              <Anchor href={sl.href} underline={sl.href === router.pathname}>
+                {sl.text}
+              </Anchor>
             </Link>
           ))}
         </Navbar>
@@ -68,11 +72,12 @@ export default function MainLayout({
               />
             </MediaQuery>
 
-            <Text>Application header</Text>
+            <Text>{title}</Text>
           </div>
         </Header>
       }
     >
+      <NextNProgress />
       {children}
     </AppShell>
   );
