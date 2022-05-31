@@ -6,11 +6,14 @@ import {
   MediaQuery,
   Burger,
   Anchor,
+  ActionIcon,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { useState } from 'react';
 import Link from 'next/link';
 import NextNProgress from 'nextjs-progressbar';
 import { useRouter } from 'next/router';
+import { Sun, MoonStars } from 'tabler-icons-react';
 
 type SiteLink = {
   href: string;
@@ -30,6 +33,8 @@ const defaultSiteLinks: SiteLink[] = [
     text: 'Rick & Morty',
   },
 ];
+
+const COLOR_THEME_ICON_SIZE = 24;
 export default function MainLayout({
   children,
   title = 'Example Application Header',
@@ -37,6 +42,7 @@ export default function MainLayout({
 }: MainLayoutProps) {
   const [opened, setOpened] = useState(false);
   const router = useRouter();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   return (
     <AppShell
@@ -73,6 +79,18 @@ export default function MainLayout({
             </MediaQuery>
 
             <Text>{title}</Text>
+            <div style={{ flex: 1 }}></div>
+            <ActionIcon
+              variant="default"
+              size={30}
+              onClick={() => toggleColorScheme()}
+            >
+              {colorScheme === 'dark' ? (
+                <Sun size={COLOR_THEME_ICON_SIZE} />
+              ) : (
+                <MoonStars size={COLOR_THEME_ICON_SIZE} />
+              )}
+            </ActionIcon>
           </div>
         </Header>
       }
