@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
+import { useEffect, useMemo, useRef } from 'react';
 import { useQuery } from 'react-query';
 import { getSdk, GetCharactersQueryVariables } from './generated/graphql';
 
@@ -18,12 +19,21 @@ export const getCharactersQueryKey = (
   return key;
 };
 
-export function useGetCharacters(variables: GetCharactersQueryVariables = {}) {
-  return useQuery(
-    getCharactersQueryKey(variables),
-    () => getCharacters(variables),
-    {
-      keepPreviousData: true,
+export function useGetCharacters(
+  variables: GetCharactersQueryVariables = {},
+  onQueryChange?: (queryVars: GetCharactersQueryVariables) => void
+) {
+  const onQueryChangeRef = useRef(onQueryChange);
+  const variablesRef = useRef(variables);
+  onQueryChangeRef.current = onQueryChange;
+  variablesRef.current = variables;
+  const queryKey = useMemo(() => getCharactersQueryKey(variables), [variables]);
+  useEffect(() => {
+    if (onQueryChangeRef.current) {
+      onQueryChangeRef.current(variablesRef.current);
     }
-  );
+  }, [queryKey]);
+  return useQuery(queryKey, () => getCharacters(variables), {
+    keepPreviousData: true,
+  });
 }
