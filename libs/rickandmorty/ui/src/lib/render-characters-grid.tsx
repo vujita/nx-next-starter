@@ -11,12 +11,12 @@ import {
   GetCharactersQueryVariables,
 } from '@myorg/rickandmorty/data-access';
 import React, { useEffect, useState } from 'react';
-import { useIsFetching } from 'react-query';
 import { Character } from './character';
 
 export type RenderCharactersGridProps = {
   page: number;
   name?: string;
+  isFetching: boolean;
   data?: GetCharactersQuery;
   onFilterChange: (newFilter: GetCharactersQueryVariables['filter']) => void;
   onPageChange: (newPage: number) => void;
@@ -26,10 +26,10 @@ export default function RenderCharactersGrid({
   page,
   name,
   data,
+  isFetching,
   onFilterChange,
   onPageChange,
 }: RenderCharactersGridProps) {
-  const isFetching = useIsFetching();
   const [localName, setLocalName] = useState<string | undefined>(name);
   useEffect(() => {
     setLocalName(name);
@@ -56,7 +56,9 @@ export default function RenderCharactersGrid({
           value={localName ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const newName = e.target.value;
-            setLocalName(newName);
+            if (!isFetching) {
+              setLocalName(newName);
+            }
           }}
         />
       </InputWrapper>

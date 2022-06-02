@@ -30,7 +30,7 @@ export default function CustomApp({ Component, pageProps }: AppProps) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: 2,
+            retry: 1,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
