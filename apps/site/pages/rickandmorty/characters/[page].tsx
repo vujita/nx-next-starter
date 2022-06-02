@@ -9,7 +9,7 @@ import BreadcrumbsLinks from '../../../components/breadcrumb-links';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from 'react-query';
 
-export default function CharactersPage({ page }) {
+export default function CharactersPage({ page, name }) {
   const router = useRouter();
   return (
     <>
@@ -32,13 +32,20 @@ export default function CharactersPage({ page }) {
       />
       <Space h={20} />
       <CharactersGrid
+        name={name}
         page={page}
-        onPageChange={(newPage) => {
+        onFilterChange={(newQueryVariables) => {
+          const query: Record<string, string | number> = {
+            page: newQueryVariables.page,
+          };
+          for (const filterFieldKey in newQueryVariables.filter) {
+            if (newQueryVariables?.filter[filterFieldKey]) {
+              query[filterFieldKey] = newQueryVariables?.filter[filterFieldKey];
+            }
+          }
           router.push({
             pathname: router.pathname,
-            query: {
-              page: newPage,
-            },
+            query,
           });
         }}
       />
@@ -48,13 +55,18 @@ export default function CharactersPage({ page }) {
 const IS_BROWSER = typeof window !== 'undefined';
 CharactersPage.getInitialProps = async ({ query }) => {
   const page = query.page ? Number(query.page) : 1;
-  const props: { page: number; dehydratedState?: unknown } = {
+  const name = query.name;
+  const props: { page: number; name?: string; dehydratedState?: unknown } = {
     page,
+    name,
   };
   if (!IS_BROWSER) {
     const queryClient = new QueryClient();
     const variables: GetCharactersQueryVariables = {
       page,
+      filter: {
+        name,
+      },
     };
     await queryClient.prefetchQuery(getCharactersQueryKey(variables), () =>
       getCharacters(variables)

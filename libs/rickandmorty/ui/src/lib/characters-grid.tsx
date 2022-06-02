@@ -1,48 +1,116 @@
-import { useGetCharacters } from '@myorg/rickandmorty/data-access';
-import { Character } from './character';
-import { Grid, Pagination, Space } from '@mantine/core';
+import {
+  FilterCharacter,
+  GetCharactersQueryVariables,
+  useGetCharacters,
+} from '@myorg/rickandmorty/data-access';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import RenderCharactersGrid from './render-characters-grid';
+import debounce from 'lodash/debounce';
+import { Button } from '@mantine/core';
 
 export type CharactersGridProps = {
   page: number;
-  onPageChange: (newPage: number) => void;
+  name?: string;
+  onFilterChange?: (newVariables: GetCharactersQueryVariables) => void;
 };
-
 export function CharactersGrid({
   page,
-  onPageChange,
+  name,
+  onFilterChange,
 }: CharactersGridProps): JSX.Element {
-  const { data } = useGetCharacters({ page });
+  const variablesRef = useRef<GetCharactersQueryVariables>({
+    page,
+    filter: {
+      name,
+    },
+  });
+  const [variables, setVariables] = useState<GetCharactersQueryVariables>(
+    variablesRef.current
+  );
+  const updateFilter = useMemo(
+    () =>
+      debounce(
+        () => {
+          const newVars = variablesRef.current;
+          const newFilter = newVars.filter ?? {};
+          const filter: GetCharactersQueryVariables['filter'] = {};
+          for (const k in newFilter) {
+            const key = k as keyof GetCharactersQueryVariables['filter'];
+            filter[key] = newFilter[key];
+          }
+          setVariables({
+            page: newVars.page,
+            filter,
+          });
+        },
+        500,
+        { leading: false, maxWait: 10000 }
+      ),
+    []
+  );
+  useEffect(() => {
+    const vRef = variablesRef.current;
+    vRef.page = page;
+    const filter = vRef.filter ?? {};
+    filter.name = name;
+    vRef.filter = filter;
+    setVariables({ ...vRef });
+  }, [page, name]);
+  const { data, isError } = useGetCharacters(variables, (newQueryVariables) => {
+    if (onFilterChange) {
+      onFilterChange(newQueryVariables);
+    }
+  });
+  if (isError || !data?.characters?.info?.count) {
+    return (
+      <>
+        <div>ERROR OCCORRED </div>
+        <Button
+          onClick={() => {
+            setVariables({
+              page: 1,
+              filter: {},
+            });
+          }}
+        >
+          Clear Query
+        </Button>
+      </>
+    );
+  }
   return (
-    <>
-      <Pagination
-        grow
-        withControls
-        withEdges
-        position="center"
-        page={page}
-        radius="xl"
-        onChange={onPageChange}
-        total={data?.characters?.info?.pages ?? 0}
-      ></Pagination>
-      <Space h={30} />
-      <Grid gutter="xl">
-        {data?.characters?.results?.map((char) => (
-          <Grid.Col sm={12} md={6} lg={4} xl={3} key={char?.id}>
-            <Character {...char}></Character>
-          </Grid.Col>
-        ))}
-      </Grid>
-      <Space h={30} />
-      <Pagination
-        grow
-        withControls
-        withEdges
-        position="center"
-        page={page}
-        radius="xl"
-        onChange={onPageChange}
-        total={data?.characters?.info?.pages ?? 0}
-      ></Pagination>
-    </>
+    <RenderCharactersGrid
+      name={name}
+      page={page}
+      data={data}
+      onFilterChange={(newFilter) => {
+        let isDiff = false;
+        const newFilterKeys = Object.keys(newFilter ?? {});
+        if (
+          newFilterKeys.length !==
+          Object.keys(variablesRef.current.filter ?? {}).length
+        ) {
+          isDiff = true;
+        } else {
+          newFilterKeys.forEach((k) => {
+            const key = k as keyof FilterCharacter;
+            if (newFilter?.[key] !== variablesRef.current?.filter?.[key]) {
+              isDiff = true;
+            }
+          });
+        }
+        if (isDiff) {
+          variablesRef.current.page = 1;
+          variablesRef.current.filter = newFilter;
+          updateFilter();
+        }
+      }}
+      onPageChange={(newPage) => {
+        setVariables({
+          page: newPage,
+          filter: variablesRef.current.filter,
+        });
+      }}
+    />
   );
 }
