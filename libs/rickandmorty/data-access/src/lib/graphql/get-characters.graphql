@@ -15,13 +15,19 @@ query getCharacters($page: Int, $filter: FilterCharacter) {
 fragment CharacterDetails on Character {
   id
   name
-  gender
+  status
   species
-  image
-  created
+  type
+  gender
   origin {
     id
     name
     dimension
   }
+  location {
+    id
+    name
+  }
+  image
+  created
 }
