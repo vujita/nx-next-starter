@@ -4,6 +4,7 @@
   "projects": {
     "rickandmorty-data-access": "libs/rickandmorty/data-access",
     "rickandmorty-ui": "libs/rickandmorty/ui",
-    "site": "apps/site"
+    "site": "apps/site",
+    "utils-debounce": "libs/utils/debounce"
   }
 }

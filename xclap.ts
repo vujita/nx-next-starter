@@ -4,6 +4,8 @@ load({
   build: exec('nx build', {
     tty: true,
   }),
+  clean: ['clean:cache', 'clean:dist'],
+  'clean:dist': exec('rm -rf dist', { tty: true }),
   'clean:cache': exec('rm -rf nx-cache', {
     tty: true,
   }),
@@ -29,7 +31,7 @@ load({
   'nx:lint': exec('nx run-many --target=lint --all', {
     tty: true,
   }),
-  'nx:test': exec('nx test', {
+  'nx:test': exec('nx run-many --target=test --all', {
     tty: true,
   }),
   'pre-commit': ['lint-staged', 'lint'],

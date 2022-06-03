@@ -5,23 +5,30 @@ import {
 } from '@myorg/rickandmorty/data-access';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import RenderCharactersGrid from './render-characters-grid';
-import debounce from 'lodash/debounce';
+import debounce from '@myorg/utils/debounce';
 import { Button } from '@mantine/core';
 
 export type CharactersGridProps = {
   page: number;
-  name?: string;
   onFilterChange?: (newVariables: GetCharactersQueryVariables) => void;
-};
+} & FilterCharacter;
 export function CharactersGrid({
   page,
   name,
+  gender,
+  species,
+  status,
+  type,
   onFilterChange,
 }: CharactersGridProps): JSX.Element {
   const variablesRef = useRef<GetCharactersQueryVariables>({
     page,
     filter: {
       name,
+      gender,
+      species,
+      status,
+      type,
     },
   });
   const [variables, setVariables] = useState<GetCharactersQueryVariables>(
@@ -29,23 +36,19 @@ export function CharactersGrid({
   );
   const updateFilter = useMemo(
     () =>
-      debounce(
-        () => {
-          const newVars = variablesRef.current;
-          const newFilter = newVars.filter ?? {};
-          const filter: GetCharactersQueryVariables['filter'] = {};
-          for (const k in newFilter) {
-            const key = k as keyof GetCharactersQueryVariables['filter'];
-            filter[key] = newFilter[key];
-          }
-          setVariables({
-            page: newVars.page,
-            filter,
-          });
-        },
-        500,
-        { leading: false, maxWait: 10000 }
-      ),
+      debounce(() => {
+        const newVars = variablesRef.current;
+        const newFilter = newVars.filter ?? {};
+        const filter: GetCharactersQueryVariables['filter'] = {};
+        for (const k in newFilter) {
+          const key = k as keyof GetCharactersQueryVariables['filter'];
+          filter[key] = newFilter[key];
+        }
+        setVariables({
+          page: newVars.page,
+          filter,
+        });
+      }, 300),
     []
   );
   useEffect(() => {
@@ -56,11 +59,14 @@ export function CharactersGrid({
     vRef.filter = filter;
     setVariables({ ...vRef });
   }, [page, name]);
-  const { data, isError } = useGetCharacters(variables, (newQueryVariables) => {
-    if (onFilterChange) {
-      onFilterChange(newQueryVariables);
+  const { data, isError, isFetching } = useGetCharacters(
+    variables,
+    (newQueryVariables) => {
+      if (onFilterChange) {
+        onFilterChange(newQueryVariables);
+      }
     }
-  });
+  );
   if (isError || !data?.characters?.info?.count) {
     return (
       <>
@@ -80,8 +86,13 @@ export function CharactersGrid({
   }
   return (
     <RenderCharactersGrid
-      name={name}
       page={page}
+      name={name}
+      gender={gender}
+      species={species}
+      status={status}
+      type={type}
+      isFetching={isFetching}
       data={data}
       onFilterChange={(newFilter) => {
         let isDiff = false;

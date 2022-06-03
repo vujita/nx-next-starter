@@ -18,7 +18,8 @@
       "@myorg/rickandmorty/data-access": [
         "libs/rickandmorty/data-access/src/index.ts"
       ],
-      "@myorg/rickandmorty/ui": ["libs/rickandmorty/ui/src/index.ts"]
+      "@myorg/rickandmorty/ui": ["libs/rickandmorty/ui/src/index.ts"],
+      "@myorg/utils/debounce": ["libs/utils/debounce/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

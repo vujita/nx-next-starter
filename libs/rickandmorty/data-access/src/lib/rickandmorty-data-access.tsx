@@ -15,7 +15,22 @@ export const { getCharacters } = getSdk(gqlClient);
 export const getCharactersQueryKey = (
   variables: GetCharactersQueryVariables = {}
 ) => {
-  const key = ['characters', JSON.stringify(variables)].join('-');
+  const key = [
+    'characters',
+    JSON.stringify({
+      page: variables.page,
+      filter: Object.keys(variables.filter || {})
+        .sort()
+        .reduce((accum, val) => {
+          const filterKey = val as keyof GetCharactersQueryVariables['filter'];
+          const v = variables.filter?.[filterKey];
+          if (v) {
+            accum[filterKey] = v;
+          }
+          return accum;
+        }, {}),
+    }),
+  ].join('-');
   return key;
 };
 
