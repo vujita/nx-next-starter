@@ -24,6 +24,7 @@ export function Character({
   name,
   created,
   species,
+  gender,
   image,
 }: CharacterProps) {
   return (
@@ -40,6 +41,7 @@ export function Character({
           value={created ? format(new Date(created), 'MM/dd/yyyy') : ''}
         />
         <NameValue name="Species" value={species} />
+        <NameValue name="Gender" value={gender} />
       </Container>
     </Card>
   );

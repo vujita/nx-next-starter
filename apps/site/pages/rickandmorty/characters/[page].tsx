@@ -3,13 +3,22 @@ import {
   GetCharactersQueryVariables,
   getCharactersQueryKey,
   getCharacters,
+  FilterCharacter,
 } from '@myorg/rickandmorty/data-access';
 import { CharactersGrid } from '@myorg/rickandmorty/ui';
 import BreadcrumbsLinks from '../../../components/breadcrumb-links';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from 'react-query';
 
-export default function CharactersPage({ page, name }) {
+type CharactersPageProps = FilterCharacter & { page: number };
+export default function CharactersPage({
+  page,
+  name,
+  gender,
+  species,
+  type,
+  status,
+}: CharactersPageProps) {
   const router = useRouter();
   return (
     <>
@@ -33,7 +42,11 @@ export default function CharactersPage({ page, name }) {
       <Space h={20} />
       <CharactersGrid
         name={name}
+        gender={gender}
         page={page}
+        species={species}
+        status={status}
+        type={type}
         onFilterChange={(newQueryVariables) => {
           const query: Record<string, string | number> = {
             page: newQueryVariables.page,
@@ -56,16 +69,31 @@ const IS_BROWSER = typeof window !== 'undefined';
 CharactersPage.getInitialProps = async ({ query }) => {
   const page = query.page ? Number(query.page) : 1;
   const name = query.name;
-  const props: { page: number; name?: string; dehydratedState?: unknown } = {
+  const gender = query.gender;
+  const type = query.type;
+  const status = query.status;
+  const species = query.species;
+  const props: CharactersPageProps & {
+    dehydratedState?: unknown;
+  } = {
     page,
+    gender,
     name,
+    type,
+    status,
+    species,
   };
   if (!IS_BROWSER) {
+    // SSR Data fetching
     const queryClient = new QueryClient();
     const variables: GetCharactersQueryVariables = {
       page,
       filter: {
+        gender,
         name,
+        type,
+        status,
+        species,
       },
     };
     await queryClient.prefetchQuery(getCharactersQueryKey(variables), () =>

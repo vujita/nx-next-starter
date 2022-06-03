@@ -4,6 +4,8 @@ load({
   build: exec('nx build', {
     tty: true,
   }),
+  clean: ['clean:cache', 'clean:dist'],
+  'clean:dist': exec('rm -rf dist', { tty: true }),
   'clean:cache': exec('rm -rf nx-cache', {
     tty: true,
   }),

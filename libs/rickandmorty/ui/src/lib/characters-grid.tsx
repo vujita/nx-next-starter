@@ -10,18 +10,25 @@ import { Button } from '@mantine/core';
 
 export type CharactersGridProps = {
   page: number;
-  name?: string;
   onFilterChange?: (newVariables: GetCharactersQueryVariables) => void;
-};
+} & FilterCharacter;
 export function CharactersGrid({
   page,
   name,
+  gender,
+  species,
+  status,
+  type,
   onFilterChange,
 }: CharactersGridProps): JSX.Element {
   const variablesRef = useRef<GetCharactersQueryVariables>({
     page,
     filter: {
       name,
+      gender,
+      species,
+      status,
+      type,
     },
   });
   const [variables, setVariables] = useState<GetCharactersQueryVariables>(
@@ -79,8 +86,12 @@ export function CharactersGrid({
   }
   return (
     <RenderCharactersGrid
-      name={name}
       page={page}
+      name={name}
+      gender={gender}
+      species={species}
+      status={status}
+      type={type}
       isFetching={isFetching}
       data={data}
       onFilterChange={(newFilter) => {
