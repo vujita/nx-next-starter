@@ -1,3 +1,9 @@
+/**
+ *
+ * @param fn Function to be wrapped by debounce
+ * @param delay delay window for debounce
+ * @returns A debounced function
+ */
 export default function utilsDebounce(
   fn: (...args: unknown[]) => unknown,
   delay: number

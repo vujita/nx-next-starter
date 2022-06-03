@@ -219,8 +219,10 @@ export type GetCharactersQuery = {
       __typename?: 'Character';
       id?: string | null;
       name?: string | null;
-      gender?: string | null;
+      status?: string | null;
       species?: string | null;
+      type?: string | null;
+      gender?: string | null;
       image?: string | null;
       created?: string | null;
       origin?: {
@@ -228,6 +230,11 @@ export type GetCharactersQuery = {
         id?: string | null;
         name?: string | null;
         dimension?: string | null;
+      } | null;
+      location?: {
+        __typename?: 'Location';
+        id?: string | null;
+        name?: string | null;
       } | null;
     } | null> | null;
   } | null;
@@ -237,8 +244,10 @@ export type CharacterDetailsFragment = {
   __typename?: 'Character';
   id?: string | null;
   name?: string | null;
-  gender?: string | null;
+  status?: string | null;
   species?: string | null;
+  type?: string | null;
+  gender?: string | null;
   image?: string | null;
   created?: string | null;
   origin?: {
@@ -247,21 +256,32 @@ export type CharacterDetailsFragment = {
     name?: string | null;
     dimension?: string | null;
   } | null;
+  location?: {
+    __typename?: 'Location';
+    id?: string | null;
+    name?: string | null;
+  } | null;
 };
 
 export const CharacterDetailsFragmentDoc = gql`
   fragment CharacterDetails on Character {
     id
     name
-    gender
+    status
     species
-    image
-    created
+    type
+    gender
     origin {
       id
       name
       dimension
     }
+    location {
+      id
+      name
+    }
+    image
+    created
   }
 `;
 export const GetCharactersDocument = gql`

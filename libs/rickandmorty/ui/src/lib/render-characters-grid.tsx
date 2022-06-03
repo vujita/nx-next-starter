@@ -6,6 +6,9 @@ import {
   Input,
   LoadingOverlay,
   Text,
+  Collapse,
+  Group,
+  Button,
 } from '@mantine/core';
 import {
   FilterCharacter,
@@ -13,6 +16,7 @@ import {
   GetCharactersQueryVariables,
 } from '@myorg/rickandmorty/data-access';
 import React, { useCallback, useEffect, useState } from 'react';
+import { Lock, LockOff } from 'tabler-icons-react';
 import { Character } from './character';
 
 const filterTypes: {
@@ -22,8 +26,8 @@ const filterTypes: {
   { filterKey: 'name', label: 'Name' },
   { filterKey: 'gender', label: 'Gender' },
   { filterKey: 'species', label: 'Species' },
-  // { key: 'status', label: 'Status' },
-  // { key: 'type', label: 'Type' },
+  { filterKey: 'status', label: 'Status' },
+  { filterKey: 'type', label: 'Type' },
 ];
 export type RenderCharactersGridProps = {
   page: number;
@@ -45,6 +49,7 @@ export default function RenderCharactersGrid({
   onFilterChange,
   onPageChange,
 }: RenderCharactersGridProps) {
+  const [visibleFilters, setVisibleFilters] = useState<boolean>(true);
   const [filterState, setFilterState] = useState<
     GetCharactersQueryVariables['filter']
   >({
@@ -91,18 +96,27 @@ export default function RenderCharactersGrid({
         total={data?.characters?.info?.pages ?? 0}
       ></Pagination>
       <Space h={10} />
-      <Text color="blue" component="div" align="right">
-        {data?.characters?.info?.count} Characters
-      </Text>
+      <Group direction="row">
+        <Button
+          onClick={() => {
+            setVisibleFilters((v) => !v);
+          }}
+        >
+          {visibleFilters ? <Lock /> : <LockOff />}
+        </Button>
+        <Text color="blue">{data?.characters?.info?.count} Characters</Text>
+      </Group>
       <Space h={30} />
-      {filterTypes.map((ft) => (
-        <InputWrapper label={ft.label} key={ft.filterKey}>
-          <Input
-            value={filterState?.[ft.filterKey] ?? ''}
-            onChange={onFilterKeyChange(ft.filterKey)}
-          />
-        </InputWrapper>
-      ))}
+      <Collapse in={visibleFilters}>
+        {filterTypes.map((ft) => (
+          <InputWrapper label={ft.label} key={ft.filterKey}>
+            <Input
+              value={filterState?.[ft.filterKey] || ''}
+              onChange={onFilterKeyChange(ft.filterKey)}
+            />
+          </InputWrapper>
+        ))}
+      </Collapse>
       <Space h={30} />
       <Grid gutter="xl">
         {data?.characters?.results?.map((char) => (

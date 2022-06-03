@@ -48,7 +48,7 @@ export function CharactersGrid({
           page: newVars.page,
           filter,
         });
-      }, 300),
+      }, 500),
     []
   );
   useEffect(() => {
@@ -67,22 +67,26 @@ export function CharactersGrid({
       }
     }
   );
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    if (isError) {
+      timeout = setTimeout(() => {
+        const newVariables = {
+          page: 1,
+          filter: {},
+        };
+        variablesRef.current = newVariables;
+        updateFilter();
+      }, 3000);
+    }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [isError, updateFilter]);
   if (isError || !data?.characters?.info?.count) {
-    return (
-      <>
-        <div>ERROR OCCORRED </div>
-        <Button
-          onClick={() => {
-            setVariables({
-              page: 1,
-              filter: {},
-            });
-          }}
-        >
-          Clear Query
-        </Button>
-      </>
-    );
+    return <div>ERROR OCCORRED </div>;
   }
   return (
     <RenderCharactersGrid
