@@ -35,7 +35,7 @@ export default function CharactersPage({
           },
           {
             title: `Page ${page}`,
-            href: '/rickandmorty/characters',
+            href: `/rickandmorty/characters/${page}`,
           },
         ]}
       />
