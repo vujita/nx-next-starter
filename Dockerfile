@@ -17,27 +17,25 @@ COPY --from=deps /app/node_modules ./node_modules
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run nx run site:build:production
-RUN cd dist/apps/site && npm install
+RUN cd dist/apps/site && npm install --only=production
 
 # Production image, copy all the files and run next
 FROM node:14.19.3-alpine3.15 AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
+ARG PORT=4200
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# You only need to copy next.config.js if you are NOT using the default configuration
-# COPY --from=builder /app/next.config.js ./
-# COPY --from=builder /app/public ./public
-# COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/dist/apps/site .
 
 USER nextjs
 
-EXPOSE 3000
+ENV PORT ${PORT}
+EXPOSE ${PORT}
 
 CMD ["npm", "start"]

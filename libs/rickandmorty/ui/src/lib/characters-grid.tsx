@@ -84,7 +84,7 @@ export function CharactersGrid({
       }
     };
   }, [isError, updateFilter]);
-  if (isError || !data?.characters?.info?.count) {
+  if (isError) {
     return <div>ERROR OCCORRED </div>;
   }
   return (
