@@ -21,6 +21,8 @@ RUN cd dist/apps/site && npm install --only=production
 
 # Production image, copy all the files and run next
 FROM node:14.19.3-alpine3.15 AS runner
+LABEL org.opencontainers.image.source https://github.com/vujita/nx-next-starter
+
 WORKDIR /app
 
 ENV NODE_ENV production
