@@ -5,8 +5,8 @@ load({
     tty: true,
   }),
   clean: ['clean:cache', 'clean:dist'],
-  'clean:dist': exec('rm -rf dist', { tty: true }),
-  'clean:cache': exec('rm -rf nx-cache', {
+  'clean:dist': exec('rimraf dist', { tty: true }),
+  'clean:cache': exec('rimraf nx-cache', {
     tty: true,
   }),
   dev: exec('nx serve', {

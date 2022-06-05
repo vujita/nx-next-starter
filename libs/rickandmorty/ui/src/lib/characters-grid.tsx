@@ -6,7 +6,6 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 import RenderCharactersGrid from './render-characters-grid';
 import debounce from '@myorg/utils/debounce';
-import { Button } from '@mantine/core';
 
 export type CharactersGridProps = {
   page: number;
