@@ -13,7 +13,9 @@
       },
       "configurations": {
         "development": {},
-        "production": {}
+        "production": {
+          "port": 4200
+        }
       }
     },
     "serve": {
