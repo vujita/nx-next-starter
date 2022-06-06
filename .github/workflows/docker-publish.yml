@@ -23,5 +23,5 @@ jobs:
           context: .
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/${{ github.actor }}${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:latest
           push: true
