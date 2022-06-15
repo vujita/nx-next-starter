@@ -41,12 +41,16 @@ export default function CharactersPage({
       />
       <Space h={20} />
       <CharactersGrid
-        name={name}
-        gender={gender}
-        page={page}
-        species={species}
-        status={status}
-        type={type}
+        initVars={{
+          page,
+          filter: {
+            name,
+            gender,
+            species,
+            type,
+            status,
+          },
+        }}
         onFilterChange={(newQueryVariables) => {
           const query: Record<string, string | number> = {
             page: newQueryVariables.page,
