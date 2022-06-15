@@ -2,23 +2,28 @@ import {
   Pagination,
   Space,
   Grid,
-  InputWrapper,
-  Input,
   LoadingOverlay,
   Text,
-  Collapse,
   Group,
+  Input,
+  InputWrapper,
   Button,
 } from '@mantine/core';
 import {
   FilterCharacter,
   GetCharactersQuery,
-  GetCharactersQueryVariables,
 } from '@myorg/rickandmorty/data-access';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Lock, LockOff } from 'tabler-icons-react';
+import { useCallback } from 'react';
 import { Character } from './character';
 
+export type RenderCharactersGridProps = {
+  page: number;
+  filter: FilterCharacter;
+  isFetching: boolean;
+  data?: GetCharactersQuery;
+  onFilterUpdate: (partialFilter: Partial<FilterCharacter>) => void;
+  onPageChange: (newPage: number) => void;
+};
 const filterTypes: {
   filterKey: keyof FilterCharacter;
   label: string;
@@ -29,59 +34,25 @@ const filterTypes: {
   { filterKey: 'status', label: 'Status' },
   { filterKey: 'type', label: 'Type' },
 ];
-export type RenderCharactersGridProps = {
-  page: number;
-  isFetching: boolean;
-  data?: GetCharactersQuery;
-  onFilterChange: (newFilter: GetCharactersQueryVariables['filter']) => void;
-  onPageChange: (newPage: number) => void;
-} & FilterCharacter;
-
 export default function RenderCharactersGrid({
   page,
-  name,
-  gender,
-  species,
-  status,
-  type,
+  filter,
   data,
   isFetching,
-  onFilterChange,
+  onFilterUpdate,
   onPageChange,
 }: RenderCharactersGridProps) {
-  const [visibleFilters, setVisibleFilters] = useState<boolean>(true);
-  const [filterState, setFilterState] = useState<
-    GetCharactersQueryVariables['filter']
-  >({
-    gender,
-    name,
-    species,
-    status,
-    type,
-  });
   const onFilterKeyChange = useCallback(
     (filerKey: keyof FilterCharacter) =>
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
-        setFilterState((currentFilterState) => ({
-          ...currentFilterState,
+        onFilterUpdate({
           [filerKey]: newValue,
-        }));
+        });
       },
-    []
+    [onFilterUpdate]
   );
-  useEffect(() => {
-    setFilterState({
-      gender,
-      name,
-      species,
-      status,
-      type,
-    });
-  }, [species, status, type, gender, name]);
-  useEffect(() => {
-    onFilterChange({ ...filterState });
-  }, [filterState, onFilterChange]);
+  const charCount = data?.characters?.info?.count ?? 0;
   return (
     <span>
       <LoadingOverlay visible={!!isFetching} />
@@ -97,27 +68,33 @@ export default function RenderCharactersGrid({
       ></Pagination>
       <Space h={10} />
       <Group direction="row">
-        <Button
-          onClick={() => {
-            setVisibleFilters((v) => !v);
-          }}
-        >
-          {visibleFilters ? <Lock /> : <LockOff />}
-        </Button>
-        <Text color="blue">{data?.characters?.info?.count} Characters</Text>
+        <Text color="blue">{charCount} Characters</Text>
+        {!charCount && (
+          <Button
+            onClick={() => {
+              onFilterUpdate({
+                gender: '',
+                name: '',
+                species: '',
+                status: '',
+                type: '',
+              });
+            }}
+          >
+            Clear Filter
+          </Button>
+        )}
       </Group>
       <Space h={30} />
-      <Collapse in={visibleFilters}>
-        {filterTypes.map((ft) => (
-          <InputWrapper label={ft.label} key={ft.filterKey}>
-            <Input
-              value={filterState?.[ft.filterKey] || ''}
-              onChange={onFilterKeyChange(ft.filterKey)}
-            />
-          </InputWrapper>
-        ))}
-      </Collapse>
-      <Space h={30} />
+      {filterTypes.map((ft) => (
+        <InputWrapper label={ft.label} key={ft.filterKey}>
+          <Input
+            key={`${ft.filterKey}-input`}
+            value={filter?.[ft.filterKey] || ''}
+            onChange={onFilterKeyChange(ft.filterKey)}
+          />
+        </InputWrapper>
+      ))}
       <Grid gutter="xl">
         {data?.characters?.results?.map((char) => (
           <Grid.Col sm={12} md={6} lg={4} xl={3} key={char?.id}>
