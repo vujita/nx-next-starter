@@ -10,3 +10,15 @@ generates:
       - typescript
       - typescript-operations
       - typescript-graphql-request
+  ./libs/rickandmorty/data-access/src/lib/generated/graphql-hooks.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-query
+    config:
+      fetcher:
+        endpoint: '"/api/rickandmorty/graphql"'
+        fetchParams:
+          headers:
+           content-type: 'application/json'
+

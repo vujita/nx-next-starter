@@ -1,6 +1,6 @@
 import {
   GetCharactersQueryVariables,
-  useGetCharacters,
+  useGetCharactersQuery,
 } from '@myorg/rickandmorty/data-access';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import RenderCharactersGrid from './render-characters-grid';
@@ -26,12 +26,16 @@ export function CharactersGrid({
   const updateFilter = useMemo(
     () =>
       debounce(() => {
-        setDataVariables({
+        const vars = {
           ...uiVarsRef.current,
           page: 1,
-        });
+        };
+        setDataVariables(vars);
+        if (onFilterChange) {
+          onFilterChange(vars);
+        }
       }, 500),
-    []
+    [onFilterChange]
   );
   useEffect(() => {
     const vars: GetCharactersQueryVariables = {
@@ -43,14 +47,9 @@ export function CharactersGrid({
     });
     setDataVariables({ ...vars });
   }, [initVars.filter, initVars.page]);
-  const { data, isFetching } = useGetCharacters(
-    dataVariables,
-    (newQueryVariables) => {
-      if (onFilterChange) {
-        onFilterChange(newQueryVariables);
-      }
-    }
-  );
+  const { data, isFetching } = useGetCharactersQuery(dataVariables, {
+    keepPreviousData: true,
+  });
   return (
     <RenderCharactersGrid
       page={uiVariables.page ?? 1}
@@ -70,10 +69,14 @@ export function CharactersGrid({
         updateFilter();
       }}
       onPageChange={(newPage) => {
-        setDataVariables((current) => ({
-          ...current,
+        const vars = {
+          ...dataVariables,
           page: newPage,
-        }));
+        };
+        setDataVariables(vars);
+        if (onFilterChange) {
+          onFilterChange(vars);
+        }
       }}
     />
   );
