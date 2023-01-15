@@ -217,6 +217,29 @@ export type QueryLocationsByIdsArgs = {
   ids: Array<Scalars['ID']>;
 };
 
+export type CharacterDetailsFragment = {
+  __typename?: 'Character';
+  id?: string | null;
+  name?: string | null;
+  status?: string | null;
+  species?: string | null;
+  type?: string | null;
+  gender?: string | null;
+  image?: string | null;
+  created?: string | null;
+  origin?: {
+    __typename?: 'Location';
+    id?: string | null;
+    name?: string | null;
+    dimension?: string | null;
+  } | null;
+  location?: {
+    __typename?: 'Location';
+    id?: string | null;
+    name?: string | null;
+  } | null;
+};
+
 export type GetCharactersQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']>;
   filter?: InputMaybe<FilterCharacter>;
@@ -255,29 +278,6 @@ export type GetCharactersQuery = {
         name?: string | null;
       } | null;
     } | null> | null;
-  } | null;
-};
-
-export type CharacterDetailsFragment = {
-  __typename?: 'Character';
-  id?: string | null;
-  name?: string | null;
-  status?: string | null;
-  species?: string | null;
-  type?: string | null;
-  gender?: string | null;
-  image?: string | null;
-  created?: string | null;
-  origin?: {
-    __typename?: 'Location';
-    id?: string | null;
-    name?: string | null;
-    dimension?: string | null;
-  } | null;
-  location?: {
-    __typename?: 'Location';
-    id?: string | null;
-    name?: string | null;
   } | null;
 };
 

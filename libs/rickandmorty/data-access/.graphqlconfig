@@ -1,0 +1,8 @@
+{
+  "name": "Rick and Morty GraphQL Schema",
+  "schemaPath": "./schema.json",
+  "extensions": {
+    "endpoints": {
+    }
+  }
+}

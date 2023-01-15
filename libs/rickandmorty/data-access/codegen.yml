@@ -5,6 +5,9 @@ hooks:
   afterAllFileWrite:
     - nx format:write
 generates:
+  ./libs/rickandmorty/data-access/schema.json:
+    plugins:
+      - introspection
   ./libs/rickandmorty/data-access/src/lib/generated/graphql.ts:
     plugins:
       - typescript
