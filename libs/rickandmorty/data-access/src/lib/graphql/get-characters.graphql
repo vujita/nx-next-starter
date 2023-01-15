@@ -1,3 +1,4 @@
+#import "./fragments/character-details.graphql"
 query getCharacters($page: Int, $filter: FilterCharacter) {
   characters(page: $page, filter: $filter) {
     info {
@@ -10,24 +11,4 @@ query getCharacters($page: Int, $filter: FilterCharacter) {
       ...CharacterDetails
     }
   }
-}
-
-fragment CharacterDetails on Character {
-  id
-  name
-  status
-  species
-  type
-  gender
-  origin {
-    id
-    name
-    dimension
-  }
-  location {
-    id
-    name
-  }
-  image
-  created
 }

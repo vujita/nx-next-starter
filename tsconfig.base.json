@@ -22,5 +22,6 @@
       "@myorg/utils/debounce": ["libs/utils/debounce/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp"],
+  "files": ["./graphql.d.ts"]
 }

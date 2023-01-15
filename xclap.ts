@@ -41,5 +41,12 @@ load({
       tty: true,
     }),
   ],
-  test: ['build', 'lint', 'nx:test', 'nx:e2e', 'nx:format:check'],
+  test: [
+    'generate:gql',
+    'build',
+    'lint',
+    'nx:test',
+    'nx:e2e',
+    'nx:format:check',
+  ],
 });
