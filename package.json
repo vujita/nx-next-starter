@@ -7,7 +7,7 @@
     "build": "clap build",
     "dev": "clap dev",
     "generate:gql": "clap generate:gql",
-    "lint": "clap",
+    "lint": "clap lint",
     "lint-staged": "clap lint-staged",
     "nx": "nx",
     "pre-commit": "clap pre-commit",
