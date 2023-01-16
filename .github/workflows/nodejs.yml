@@ -21,14 +21,18 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Cache multiple paths
+      - name: Cache dependencies
         uses: actions/cache@v2
         with:
-          path: |
-            ~/cache
-            !~/cache/exclude
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+      - name: Cache nx
+        uses: actions/cache@v2
+        with:
+          path: nx-cache
+          key: nx-${{ hashFiles('package-lock.json') }}
+          restore-keys: nx-cache-
 
       - uses: actions/setup-node@v2
         with:
