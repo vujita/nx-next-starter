@@ -21,12 +21,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: npm-
       - name: Cache nx
         uses: actions/cache@v2
         with:
@@ -34,8 +28,10 @@ jobs:
           key: nx-${{ hashFiles('package-lock.json') }}
           restore-keys: nx-cache-
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.13.0"
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
       - run: npm ci
       - run: npm test
