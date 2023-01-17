@@ -11,7 +11,14 @@ import {
 import MainLayout from '../components/main-layout';
 import { useLocalStorage } from '@mantine/hooks';
 
-export default function CustomApp({ Component, pageProps }: AppProps) {
+export default function CustomApp({
+  Component,
+  pageProps,
+}: AppProps & {
+  pageProps: AppProps['pageProps'] & {
+    dehydratedState?: unknown;
+  };
+}) {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
   const [localStorageColorScheme, setLocalStorageScheme] =
     useLocalStorage<ColorScheme>({
