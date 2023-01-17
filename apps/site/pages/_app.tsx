@@ -10,6 +10,7 @@ import {
 } from '@mantine/core';
 import MainLayout from '../components/main-layout';
 import { useLocalStorage } from '@mantine/hooks';
+import './styles.css';
 
 export default function CustomApp({
   Component,

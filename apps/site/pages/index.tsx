@@ -2,6 +2,7 @@ import { Center, Text, List, ListItem, Anchor } from '@mantine/core';
 export default function Index() {
   return (
     <>
+      <div className="bg-blue-500">Hello</div>
       <Center>
         <Text weight={700}>A placeholder for App home page</Text>
       </Center>
